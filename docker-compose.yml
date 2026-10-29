@@ -1,0 +1,24 @@
+services:
+  web:
+    build: .
+    ports:
+      - "${APP_PORT:-8001}:8000"
+    environment:
+      SECRET_KEY: ${SECRET_KEY:-dev-compose-secret-change-me}
+      DATABASE_PATH: /data/helpdesk.db
+      LOG_LEVEL: INFO
+    volumes:
+      - helpdesk-data:/data
+    restart: unless-stopped
+    healthcheck:
+      test:
+        - CMD
+        - python
+        - -c
+        - "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/login')"
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+volumes:
+  helpdesk-data:

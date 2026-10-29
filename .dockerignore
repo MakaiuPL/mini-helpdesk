@@ -12,5 +12,10 @@ instance
 *.db-shm
 .env
 tests
+docs
 legacy
 README.md
+.ruff_cache
+pyproject.toml
+pytest.ini
+requirements-dev.txt
