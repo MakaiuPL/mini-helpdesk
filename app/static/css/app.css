@@ -15,7 +15,8 @@
 }
 
 :root {
-  color-scheme: light dark;
+  color-scheme: light;
+  --page: #f7f7f7;
   --bg: #ffffff;
   --bg-subtle: #fafafa;
   --fg: #000000;
@@ -36,25 +37,6 @@
   --mono: "Geist Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --bg: #000000;
-    --bg-subtle: #0a0a0a;
-    --fg: #ffffff;
-    --fg-soft: #c7c7c7;
-    --muted: #8f8f8f;
-    --border: #262626;
-    --border-strong: #444444;
-    --hover: #141414;
-    --accent: #ffffff;
-    --accent-fg: #000000;
-    --danger: #ff7b72;
-    --danger-bg: #1c0d0c;
-    --success: #56d364;
-    --success-bg: #0c1c12;
-  }
-}
-
 *,
 *::before,
 *::after {
@@ -67,7 +49,7 @@ html {
 
 body {
   margin: 0;
-  background: var(--bg);
+  background: var(--page);
   color: var(--fg);
   font-family: var(--font);
   font-size: 15px;
@@ -140,7 +122,6 @@ code {
 .brand {
   display: inline-flex;
   align-items: center;
-  gap: 10px;
   font-weight: 600;
   letter-spacing: -0.02em;
   white-space: nowrap;
@@ -148,13 +129,6 @@ code {
 
 .brand:hover {
   text-decoration: none;
-}
-
-.brand-mark {
-  width: 16px;
-  height: 15px;
-  background: var(--fg);
-  clip-path: polygon(50% 0, 100% 100%, 0 100%);
 }
 
 .nav-links {
@@ -463,6 +437,7 @@ textarea:focus {
   overflow-x: auto;
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
+  background: var(--bg);
 }
 
 .table-flush {
@@ -738,6 +713,7 @@ tbody a {
   padding: 20px;
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
+  background: var(--bg);
 }
 
 .stat-value {
@@ -802,6 +778,7 @@ tbody a {
   padding: 28px;
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
+  background: var(--bg);
 }
 
 .login-card h1 {

@@ -30,7 +30,7 @@ Celem jest mała, ale kompletna aplikacja helpdeskowa, która demonstruje:
   zamknięcia,
 - eksport przefiltrowanej listy do CSV,
 - interfejs w języku polskim, bez JavaScriptu,
-- automatyczny tryb ciemny zgodny z ustawieniem systemu.
+- jasny, monochromatyczny interfejs oparty o font Geist.
 
 ## Role i uprawnienia
 
@@ -348,8 +348,8 @@ tymczasowego pliku SQLite i prawdziwego klienta testowego Flaska.
 - **DTO** — `TicketInput` i `TicketFilter` oddzielają dane z formularza od
   modelu domenowego.
 - **Własny design system zamiast frameworka CSS** — kilkaset linii CSS ze
-  zmiennymi, monochromatyczna paleta, font Geist i tryb ciemny; brak zależności
-  od CDN i brak JavaScriptu.
+  zmiennymi, monochromatyczna paleta i font Geist; brak zależności od CDN i brak
+  JavaScriptu.
 - **CSV ze średnikiem i BOM** — plik poprawnie otwiera się w polskim Excelu.
 - **UTC w bazie** — daty są spójne niezależnie od strefy czasowej serwera;
   interfejs oznacza je jako UTC.
