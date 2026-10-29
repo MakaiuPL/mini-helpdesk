@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block title %}Nie znaleziono — Mini Helpdesk{% endblock %}
+
+{% block content %}
+  <div class="error-page">
+    <p class="eyebrow">404</p>
+    <h1>Nie znaleziono</h1>
+    <p class="lead muted" style="margin-top: 8px;">Żądany zasób nie istnieje lub nie jest dla Ciebie dostępny.</p>
+    <a class="btn" href="{{ url_for('tickets.list_tickets') }}">Wróć do zgłoszeń</a>
+  </div>
+{% endblock %}

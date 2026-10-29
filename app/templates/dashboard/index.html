@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+
+{% block title %}Panel — Mini Helpdesk{% endblock %}
+
+{% block content %}
+  {% set status_max = (stats.by_status.values()|max) or 1 %}
+  {% set priority_max = (stats.by_priority.values()|max) or 1 %}
+
+  <header class="page-head">
+    <div>
+      <h1>Panel</h1>
+      <p class="lead">Podsumowanie wszystkich zgłoszeń w systemie.</p>
+    </div>
+    <div class="actions">
+      <a class="btn btn-secondary" href="{{ url_for('tickets.list_tickets') }}">Lista zgłoszeń</a>
+    </div>
+  </header>
+
+  <div class="stats">
+    <div class="stat">
+      <div class="stat-value">{{ stats.total }}</div>
+      <div class="stat-label">Wszystkie zgłoszenia</div>
+    </div>
+    <div class="stat">
+      <div class="stat-value">{{ stats.by_status[statuses[0]] }}</div>
+      <div class="stat-label">Nowe</div>
+    </div>
+    <div class="stat">
+      <div class="stat-value">{{ stats.by_status[statuses[3]] }}</div>
+      <div class="stat-label">Zamknięte</div>
+    </div>
+    <div class="stat">
+      <div class="stat-value">{{ stats.avg_close_hours|format_hours }}</div>
+      <div class="stat-label">Średni czas zamknięcia</div>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <section class="card">
+      <div class="card-head"><h2>Według statusu</h2></div>
+      <div class="card-body">
+        <div class="breakdown">
+          {% for status in statuses %}
+            <div class="breakdown-row">
+              <span>{{ status|status_label }}</span>
+              <span class="value">{{ stats.by_status[status] }}</span>
+              <div class="bar"><span style="width: {{ (stats.by_status[status] / status_max * 100)|round(1) }}%"></span></div>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="card-head"><h2>Według priorytetu</h2></div>
+      <div class="card-body">
+        <div class="breakdown">
+          {% for priority in priorities %}
+            <div class="breakdown-row">
+              <span>{{ priority|priority_label }}</span>
+              <span class="value">{{ stats.by_priority[priority] }}</span>
+              <div class="bar"><span style="width: {{ (stats.by_priority[priority] / priority_max * 100)|round(1) }}%"></span></div>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    </section>
+  </div>
+{% endblock %}

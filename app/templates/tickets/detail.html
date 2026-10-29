@@ -1,0 +1,148 @@
+{% extends "base.html" %}
+{% from "_macros.html" import csrf_field, priority_badge, status_badge %}
+
+{% block title %}{{ details.ticket.title }} — Mini Helpdesk{% endblock %}
+
+{% block content %}
+  {% set ticket = details.ticket %}
+  <header class="page-head">
+    <div>
+      <p class="eyebrow">Zgłoszenie #{{ ticket.id }}</p>
+      <h1>{{ ticket.title }}</h1>
+      <p class="badges">
+        {{ status_badge(ticket.status) }}
+        {{ priority_badge(ticket.priority) }}
+        <span class="badge">{{ ticket.channel|channel_label }}</span>
+      </p>
+    </div>
+    <div class="actions">
+      <a class="btn btn-secondary" href="{{ url_for('tickets.list_tickets') }}">Wróć do listy</a>
+    </div>
+  </header>
+
+  <div class="detail">
+    <div class="detail-main">
+      <section class="card">
+        <div class="card-head"><h2>Opis</h2></div>
+        <div class="card-body">
+          <p class="prose">{{ ticket.description }}</p>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="card-head"><h2>Komentarze</h2><span class="muted">{{ details.comments|length }}</span></div>
+        <div class="card-body">
+          {% if details.comments %}
+            <div class="comments">
+              {% for comment in details.comments %}
+                <article class="comment">
+                  <div class="comment-head">
+                    <strong>{{ comment.author.full_name }}</strong>
+                    <time datetime="{{ comment.created_at.isoformat() }}">{{ comment.created_at|format_datetime }} UTC</time>
+                  </div>
+                  <p>{{ comment.body }}</p>
+                </article>
+              {% endfor %}
+            </div>
+          {% else %}
+            <p class="muted">Brak komentarzy.</p>
+          {% endif %}
+
+          {% if g.user.is_technician %}
+            <form method="post" action="{{ url_for('tickets.add_comment', ticket_id=ticket.id) }}" class="comment-form">
+              {{ csrf_field() }}
+              <div class="field">
+                <label for="body">Dodaj komentarz</label>
+                <textarea id="body" name="body" rows="4" maxlength="2000" required></textarea>
+              </div>
+              <button type="submit" class="btn">Dodaj komentarz</button>
+            </form>
+          {% endif %}
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="card-head"><h2>Historia statusów</h2></div>
+        {% if details.history %}
+          <div class="table-wrap table-flush">
+            <table>
+              <thead>
+                <tr><th>Data (UTC)</th><th>Kto</th><th>Zmiana</th></tr>
+              </thead>
+              <tbody>
+                {% for change in details.history %}
+                  <tr>
+                    <td class="num">{{ change.changed_at|format_datetime }}</td>
+                    <td>{{ change.changed_by.full_name }}</td>
+                    <td>
+                      {% if change.old_status %}
+                        {{ change.old_status|status_label }} → {{ change.new_status|status_label }}
+                      {% else %}
+                        utworzenie → {{ change.new_status|status_label }}
+                      {% endif %}
+                    </td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        {% else %}
+          <div class="card-body"><p class="muted">Brak historii zmian.</p></div>
+        {% endif %}
+      </section>
+    </div>
+
+    <aside class="detail-main">
+      <section class="card">
+        <div class="card-head"><h2>Szczegóły</h2></div>
+        <div class="card-body">
+          <dl class="meta">
+            <dt>Autor</dt>
+            <dd>{{ ticket.author.full_name }}</dd>
+            <dt>Technik</dt>
+            <dd>{{ ticket.assignee.full_name if ticket.assignee else "Nieprzypisane" }}</dd>
+            <dt>Utworzono</dt>
+            <dd>{{ ticket.created_at|format_datetime }}</dd>
+            <dt>Aktualizacja</dt>
+            <dd>{{ ticket.updated_at|format_datetime }}</dd>
+            <dt>Zamknięto</dt>
+            <dd>{{ ticket.closed_at|format_datetime }}</dd>
+          </dl>
+        </div>
+      </section>
+
+      {% if g.user.is_technician %}
+        <section class="card">
+          <div class="card-head"><h2>Działania technika</h2></div>
+          <div class="card-body stack">
+            {% if next_statuses %}
+              <form method="post" action="{{ url_for('tickets.change_status', ticket_id=ticket.id) }}">
+                {{ csrf_field() }}
+                <div class="field">
+                  <label for="status">Zmień status</label>
+                  <select id="status" name="status">
+                    {% for status in next_statuses %}
+                      <option value="{{ status.value }}">{{ status|status_label }}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+                <button type="submit" class="btn btn-secondary">Zmień status</button>
+              </form>
+            {% else %}
+              <p class="muted">Brak dostępnych przejść statusu.</p>
+            {% endif %}
+
+            {% if not ticket.is_assigned_to(g.user) %}
+              <form method="post" action="{{ url_for('tickets.assign_to_self', ticket_id=ticket.id) }}">
+                {{ csrf_field() }}
+                <button type="submit" class="btn">Przypisz do siebie</button>
+              </form>
+            {% else %}
+              <p class="muted">Zgłoszenie jest przypisane do Ciebie.</p>
+            {% endif %}
+          </div>
+        </section>
+      {% endif %}
+    </aside>
+  </div>
+{% endblock %}

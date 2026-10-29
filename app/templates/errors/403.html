@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block title %}Brak dostępu — Mini Helpdesk{% endblock %}
+
+{% block content %}
+  <div class="error-page">
+    <p class="eyebrow">403</p>
+    <h1>Brak dostępu</h1>
+    <p class="lead muted" style="margin-top: 8px;">Nie masz uprawnień do wykonania tej operacji.</p>
+    <a class="btn" href="{{ url_for('tickets.list_tickets') }}">Wróć do zgłoszeń</a>
+  </div>
+{% endblock %}

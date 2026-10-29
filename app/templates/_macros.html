@@ -1,0 +1,15 @@
+{% macro csrf_field() -%}
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+{%- endmacro %}
+
+{% macro status_badge(status) -%}
+  <span class="badge badge-status-{{ status.value }}"><span class="dot"></span>{{ status|status_label }}</span>
+{%- endmacro %}
+
+{% macro priority_badge(priority) -%}
+  <span class="badge badge-priority-{{ priority.value }}"><span class="dot"></span>{{ priority|priority_label }}</span>
+{%- endmacro %}
+
+{% macro field_error(errors, field) -%}
+  {% if errors.get(field) %}<small class="field-error">{{ errors[field] }}</small>{% endif %}
+{%- endmacro %}

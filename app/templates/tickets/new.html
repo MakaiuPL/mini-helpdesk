@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% from "_macros.html" import csrf_field, field_error %}
+
+{% block title %}Nowe zgłoszenie — Mini Helpdesk{% endblock %}
+
+{% block content %}
+  <header class="page-head">
+    <div>
+      <h1>Nowe zgłoszenie</h1>
+      <p class="lead">Opisz problem możliwie dokładnie — technik zobaczy ten opis.</p>
+    </div>
+    <div class="actions">
+      <a class="btn btn-ghost" href="{{ url_for('tickets.list_tickets') }}">Wróć do listy</a>
+    </div>
+  </header>
+
+  <div class="card form-narrow">
+    <div class="card-body">
+      <form method="post" action="{{ url_for('tickets.create_ticket') }}">
+        {{ csrf_field() }}
+
+        <div class="field">
+          <label for="title">Tytuł</label>
+          <input id="title" name="title" value="{{ form.title }}" maxlength="120" required>
+          {{ field_error(errors, "title") }}
+        </div>
+
+        <div class="field">
+          <label for="description">Opis</label>
+          <textarea id="description" name="description" rows="8" maxlength="5000" required>{{ form.description }}</textarea>
+          {{ field_error(errors, "description") }}
+        </div>
+
+        <div class="form-row">
+          <div>
+            <label for="priority">Priorytet</label>
+            <select id="priority" name="priority">
+              {% for priority in priorities %}
+                <option value="{{ priority.value }}" {% if form.priority == priority.value %}selected{% endif %}>{{ priority|priority_label }}</option>
+              {% endfor %}
+            </select>
+            {{ field_error(errors, "priority") }}
+          </div>
+          <div>
+            <label for="channel">Kanał</label>
+            <select id="channel" name="channel">
+              {% for channel in channels %}
+                <option value="{{ channel.value }}" {% if form.channel == channel.value %}selected{% endif %}>{{ channel|channel_label }}</option>
+              {% endfor %}
+            </select>
+            {{ field_error(errors, "channel") }}
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" class="btn">Wyślij zgłoszenie</button>
+          <a class="btn btn-secondary" href="{{ url_for('tickets.list_tickets') }}">Anuluj</a>
+        </div>
+      </form>
+    </div>
+  </div>
+{% endblock %}

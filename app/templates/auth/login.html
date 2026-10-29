@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% from "_macros.html" import csrf_field, field_error %}
+
+{% block title %}Logowanie — Mini Helpdesk{% endblock %}
+
+{% block content %}
+  <div class="login">
+    <div class="login-card">
+      <h1>Zaloguj się</h1>
+      <p class="login-sub">System zgłoszeń IT dla małego zespołu.</p>
+
+      {% if errors.get("_") %}
+        <div class="form-error">{{ errors["_"] }}</div>
+      {% endif %}
+
+      <form method="post" action="{{ url_for('auth.login') }}">
+        {{ csrf_field() }}
+
+        <div class="field">
+          <label for="username">Nazwa użytkownika</label>
+          <input id="username" name="username" value="{{ username }}" autocomplete="username" required>
+          {{ field_error(errors, "username") }}
+        </div>
+
+        <div class="field">
+          <label for="password">Hasło</label>
+          <input id="password" name="password" type="password" autocomplete="current-password" required>
+          {{ field_error(errors, "password") }}
+        </div>
+
+        <button type="submit" class="btn">Zaloguj</button>
+      </form>
+
+      <div class="demo">
+        Konta demo: <code>anna</code> / <code>anna1234</code> — użytkownik<br>
+        <code>marek</code> / <code>marek1234</code> — technik
+      </div>
+    </div>
+  </div>
+{% endblock %}

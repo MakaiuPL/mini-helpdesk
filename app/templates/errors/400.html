@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block title %}Błąd żądania — Mini Helpdesk{% endblock %}
+
+{% block content %}
+  <div class="error-page">
+    <p class="eyebrow">400</p>
+    <h1>Nieprawidłowe żądanie</h1>
+    <p class="lead muted" style="margin-top: 8px;">{{ message or "Nie udało się przetworzyć żądania." }}</p>
+    <a class="btn" href="{{ url_for('tickets.list_tickets') }}">Wróć do zgłoszeń</a>
+  </div>
+{% endblock %}
